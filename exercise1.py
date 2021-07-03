@@ -57,8 +57,8 @@ for epoch in range( 20 ) :
     running_loss = 0.0
 
     num_correct = 0
-    for i, data in enumerate( train_loader ):
-        x, y = data[ 0 ], data[ 1 ]
+    for i, ( x, y ) in enumerate( train_loader ):
+        # x, y = data[ 0 ], data[ 1 ]
         
         optimizer.zero_grad()
         y_pred = model( x )
