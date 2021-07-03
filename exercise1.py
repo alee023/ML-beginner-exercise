@@ -23,7 +23,7 @@ train_dataset.transform = data_transforms
 test_dataset.transform = data_transforms
 
 # batch size = 128
-train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 128, shuffle = True )
+train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 64, shuffle = True )
 test_loader = torch.utils.data.DataLoader( test_dataset, batch_size = 512, shuffle = True )
 
 # a, b = next( iter(train_loader ))
@@ -53,23 +53,23 @@ print(output.shape)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 
-# =============================================================================
-# for epoch in range( 20 ) :
-#     running_loss = 0.0
-# 
-#     num_correct = 0
-#     for x, y in enumerate( train_loader ):
-#         optimizer.zero_grad()
-#         y_pred = model( x )
-#         
-#         loss = criterion( y_pred, y )
-#         loss.backward()
-#         optimizer.step()
-#         
-#         running_loss += loss.item()
-#         
-#         y_pred = y_pred.data.max(1,keepdim=True)[1]
-#         num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
-#     running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
-#     print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
-# =============================================================================
+=============================================================================
+for epoch in range( 20 ) :
+    running_loss = 0.0
+
+    num_correct = 0
+    for x, y in enumerate( train_loader ):
+        optimizer.zero_grad()
+        y_pred = model( x )
+        
+        loss = criterion( y_pred, y )
+        loss.backward()
+        optimizer.step()
+        
+        running_loss += loss.item()
+        
+        y_pred = y_pred.data.max(1,keepdim=True)[1]
+        num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
+    running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
+    print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
+=============================================================================
