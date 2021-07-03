@@ -50,7 +50,7 @@ input = torch.randn(( 10,1,244,244 ))
 output = model(input)
 print(output.shape)
 
-criterion = nn.CrossEntropyLoss()
+criterion = nn.NLLLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 
 for epoch in range( 20 ) :
