@@ -4,6 +4,7 @@ from torchvision import transforms
 import torchvision.models as models
 import torch.nn as nn
 import torch.optim as optim
+from tqdm.autonotebook import tqdm
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -52,12 +53,14 @@ print(output.shape)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
+batches = len(train_loader)
 
 for epoch in range( 20 ) :
     running_loss = 0.0
+    progress = tqdm(enumerate(train_loader), desc="Loss: ", total=batches)
 
     num_correct = 0
-    for i, data in enumerate( train_loader ):
+    for i, data in progress:
         x, y = data[ 0 ], data[ i ]
         
         optimizer.zero_grad()
