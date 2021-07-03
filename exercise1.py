@@ -53,7 +53,6 @@ print(output.shape)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 
-=============================================================================
 for epoch in range( 20 ) :
     running_loss = 0.0
 
@@ -72,4 +71,3 @@ for epoch in range( 20 ) :
         num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
     running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
     print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
-=============================================================================
