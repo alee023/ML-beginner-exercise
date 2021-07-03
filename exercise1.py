@@ -46,7 +46,7 @@ class Net( nn.Module ) :
     
 model = Net()
 
-input = torch.randn(( 128,1,244,244 ))
+input = torch.randn(( 10,1,244,244 ))
 output = model(input)
 print(output.shape)
 
