@@ -7,8 +7,8 @@ import torch.optim as optim
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 | x != 7 ) else ( 0 if x == 3 else 1 )))
-test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 | x != 7 ) else ( 0 if x == 3 else 1 )))
+train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 and x != 7 ) else ( 0 if x == 3 else 1 )))
+test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 and x != 7 ) else ( 0 if x == 3 else 1 )))
 
 # filtering to keep only 3s and 7s
 indices0 = ( train_dataset.targets == torch.tensor( 0 )) | ( train_dataset.targets == torch.tensor( 1 ))
