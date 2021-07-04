@@ -17,8 +17,10 @@ indices1 = ( test_dataset.targets == torch.tensor( 0 )) | ( test_dataset.targets
 test_dataset.data, test_dataset.targets = test_dataset.data[ indices1 ], test_dataset.targets[ indices1 ]
 
 # changing 3s and 7s to 0s and 1s 
-train_dataset.targets[ train_dataset.targets == 3 ], test_dataset.targets[ test_dataset.targets == 3 ] = 0
-train_dataset.targets[ train_dataset.targets == 1 ], test_dataset.targets[ test_dataset.targets == 7 ] = 1
+train_dataset.targets[ train_dataset.targets == 3 ] = 1
+test_dataset.targets[ test_dataset.targets == 3 ] = 0
+train_dataset.targets[ train_dataset.targets == 1 ] = 1
+test_dataset.targets[ test_dataset.targets == 7 ] = 1
 
 # normalization and resizing for resnet50 -- 224x224
 data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize((224, 224)), transforms.Normalize((0.1397,),(0.3081,))]) 
