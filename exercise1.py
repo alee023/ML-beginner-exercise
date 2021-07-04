@@ -7,14 +7,18 @@ import torch.optim as optim
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 and x != 7 ) else ( 0 if x == 3 else 1 )))
-test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True, target_transform = transforms.Lambda( lambda x: 2 if ( x != 3 and x != 7 ) else ( 0 if x == 3 else 1 )))
+train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True )
+test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True )
 
 # filtering to keep only 3s and 7s
 indices0 = ( train_dataset.targets == torch.tensor( 0 )) | ( train_dataset.targets == torch.tensor( 1 ))
 train_dataset.data, train_dataset.targets = train_dataset.data[ indices0 ], train_dataset.targets[ indices0 ]
 indices1 = ( test_dataset.targets == torch.tensor( 0 )) | ( test_dataset.targets == torch.tensor( 1 ))
 test_dataset.data, test_dataset.targets = test_dataset.data[ indices1 ], test_dataset.targets[ indices1 ]
+
+# changing 3s and 7s to 0s and 1s 
+train_dataset.targets[ train_dataset.targets == 3 ], test_dataset.targets[ test_dataset.targets == 3 ] = 0
+train_dataset.targets[ train_dataset.targets == 1 ], test_dataset.targets[ test_dataset.targets == 7 ] = 1
 
 # normalization and resizing for resnet50 -- 224x224
 data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize((224, 224)), transforms.Normalize((0.1397,),(0.3081,))]) 
