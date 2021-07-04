@@ -22,8 +22,8 @@ test_dataset.targets[ test_dataset.targets == 3 ] = 0
 train_dataset.targets[ train_dataset.targets == 1 ] = 1
 test_dataset.targets[ test_dataset.targets == 7 ] = 1
 
-# normalization and resizing for resnet50 -- 224x224
-data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize((224, 224)), transforms.Normalize((0.1397,),(0.3081,))]) 
+# normalization and resizing for AlexNet -- 224x224
+data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize(( 224, 224 )), transforms.Normalize((0.1397,),(0.3081,))]) 
 
 train_dataset.transform = data_transforms
 test_dataset.transform = data_transforms
@@ -32,30 +32,30 @@ test_dataset.transform = data_transforms
 train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 64, shuffle = True )
 test_loader = torch.utils.data.DataLoader( test_dataset, batch_size = 512, shuffle = True )
 
-a, b = next( iter(train_loader ))
-print( a.shape, b.shape )
-print( torch.min( b ), torch.max( b ))
+#  a, b = next( iter(train_loader ))
+#  print( a.shape, b.shape )
+#  print( torch.min( b ), torch.max( b ))
 
 class Net( nn.Module ) :
     def __init__( self ) :
         super( Net, self ).__init__()
         
-        self.model = models.resnet50( pretrained = True )
+        self.model = models.alexnet( pretrained = True )
         # changed in_channels from 3 to 1 bc images are black and white 
-        self.model.conv1 = nn.Conv2d( 1, 64, kernel_size = 7, stride = 2, padding = 3, bias = False )
+        self.model.features[ 0 ] = nn.Conv2d( 1, 64, kernel_size = 11, stride = 4, padding = 2 )
         
         # binary classifier -> 2 out_features
-        num_ftrs = self.model.fc.in_features
-        self.model.fc = nn.Linear( num_ftrs, 2 )
+        self.model.classifier[ 4 ] = nn.Linear( 4096, 1024 )
+        self.model.classifier[ 6 ] = nn.Linear( 1024, 2 )
         
     def forward( self, x ):
         return self.model( x )
     
 model = Net()
 
-# input = torch.randn(( 10,1,244,244 ))
-# output = model(input)
-# print(output.shape)
+input = torch.randn(( 10,1,244,244 ))
+output = model(input)
+print(output.shape)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
