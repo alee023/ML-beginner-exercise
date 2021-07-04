@@ -17,7 +17,7 @@ indices1 = ( test_dataset.targets == torch.tensor( 3 )) | ( test_dataset.targets
 test_dataset.data, test_dataset.targets = test_dataset.data[ indices1 ], test_dataset.targets[ indices1 ]
 
 # normalization and resizing for resnet50 -- 224x224
-data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize((224, 224)), transforms.Normalize((0.1397,),(0.3081,))]) 
+data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize((224, 224)), transforms.Normalize((0.1397,),(0.3081,)), transforms.Lambda( lambda x: 0 if x == 3 else 1 )]) 
 
 train_dataset.transform = data_transforms
 test_dataset.transform = data_transforms
@@ -26,8 +26,9 @@ test_dataset.transform = data_transforms
 train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 64, shuffle = True )
 test_loader = torch.utils.data.DataLoader( test_dataset, batch_size = 512, shuffle = True )
 
-# a, b = next( iter(train_loader ))
-# print( a.shape, b.shape )
+a, b = next( iter(train_loader ))
+print( a.shape, b.shape )
+print( torch.min( b ), torch.max( b ))
 
 class Net( nn.Module ) :
     def __init__( self ) :
