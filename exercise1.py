@@ -63,7 +63,9 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 
 # pre-training check for accuracy
-for epoch in range( 6 ) :
+print( "******** PRETRAIN ********")
+
+for epoch in range( 3 ) :
     running_loss = 0.0
     num_correct = 0
     model.eval() 
@@ -81,7 +83,8 @@ for epoch in range( 6 ) :
     running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
     print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
 
-for epoch in range( 6 ) :
+print( "******** TRAINING ********")
+for epoch in range( 5 ) :
     running_loss = 0.0
 
     num_correct = 0
@@ -103,4 +106,23 @@ for epoch in range( 6 ) :
     print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
     
 # save model
+torch.save( model.state_dict(), "mnist_alexnet.pt" )
+
 # test model
+for epoch in range( 5 ) :
+    running_loss = 0.0
+    num_correct = 0
+    model.eval() 
+    with torch.no_grad() :
+        for i, ( x, y ) in enumerate( train_loader ):
+            x, y = x.to( device ), y.to( device )
+            
+            y_pred = model( x )
+            
+            loss = criterion( y_pred, y )
+            running_loss += loss.item()
+            
+            y_pred = y_pred.data.max(1,keepdim=True)[1]
+            num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
+    running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
+    print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
