@@ -17,9 +17,9 @@ indices1 = ( test_dataset.targets == torch.tensor( 0 )) | ( test_dataset.targets
 test_dataset.data, test_dataset.targets = test_dataset.data[ indices1 ], test_dataset.targets[ indices1 ]
 
 # changing 3s and 7s to 0s and 1s 
-train_dataset.targets[ train_dataset.targets == 3 ] = 1
+train_dataset.targets[ train_dataset.targets == 3 ] = 0
 test_dataset.targets[ test_dataset.targets == 3 ] = 0
-train_dataset.targets[ train_dataset.targets == 1 ] = 1
+train_dataset.targets[ train_dataset.targets == 7 ] = 1
 test_dataset.targets[ test_dataset.targets == 7 ] = 1
 
 # normalization and resizing for AlexNet -- 224x224
@@ -110,7 +110,7 @@ torch.save( model.state_dict(), "mnist_alexnet.pt" )
 
 # test model
 print( "******** TESTING ********")
-for epoch in range( 5 ) :
+for epoch in range( 3 ) :
     running_loss = 0.0
     num_correct = 0
     model.eval() 
@@ -125,5 +125,5 @@ for epoch in range( 5 ) :
             
             y_pred = y_pred.data.max(1,keepdim=True)[1]
             num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
-    running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
+    running_loss /= len(test_loader) #Divide by the number of batches to get the average sample error
     print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
