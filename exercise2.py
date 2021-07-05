@@ -10,17 +10,15 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True )
 test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True )
 
-# filtering to keep only 3s and 7s
-indices0 = ( train_dataset.targets == torch.tensor( 0 )) | ( train_dataset.targets == torch.tensor( 1 ))
-train_dataset.data, train_dataset.targets = train_dataset.data[ indices0 ], train_dataset.targets[ indices0 ]
-indices1 = ( test_dataset.targets == torch.tensor( 0 )) | ( test_dataset.targets == torch.tensor( 1 ))
-test_dataset.data, test_dataset.targets = test_dataset.data[ indices1 ], test_dataset.targets[ indices1 ]
-
-# changing 3s and 7s to 0s and 1s 
+# changing 3s and 7s, everything else to 0s, 1s, and 2s respectively... better way to do this?
+train_dataset.targets[( train_dataset.targets != 3 ) and ( train_dataset.targets != 7 )] = 11
+test_dataset.targets[( test_dataset.targets != 3 ) and ( test_dataset.targets != 7 )] = 11
 train_dataset.targets[ train_dataset.targets == 3 ] = 0
 test_dataset.targets[ test_dataset.targets == 3 ] = 0
 train_dataset.targets[ train_dataset.targets == 7 ] = 1
 test_dataset.targets[ test_dataset.targets == 7 ] = 1
+train_dataset.targets[ train_dataset.targets == 11 ] = 2
+test_dataset.targets[ test_dataset.targets == 11 ] = 2
 
 # normalization and resizing for AlexNet -- 224x224
 data_transforms = transforms.Compose([ transforms.ToTensor(), transforms.Resize(( 224, 224 )), transforms.Normalize((0.1397,),(0.3081,))]) 
@@ -46,7 +44,7 @@ class Net( nn.Module ) :
         
         # binary classifier -> 2 out_features
         self.model.classifier[ 4 ] = nn.Linear( 4096, 1024 )
-        self.model.classifier[ 6 ] = nn.Linear( 1024, 2 )
+        self.model.classifier[ 6 ] = nn.Linear( 1024, 3 )
         
     def forward( self, x ):
         return self.model( x )
