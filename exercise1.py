@@ -115,7 +115,7 @@ for epoch in range( 5 ) :
     num_correct = 0
     model.eval() 
     with torch.no_grad() :
-        for i, ( x, y ) in enumerate( train_loader ):
+        for i, ( x, y ) in enumerate( test_loader ):
             x, y = x.to( device ), y.to( device )
             
             y_pred = model( x )
