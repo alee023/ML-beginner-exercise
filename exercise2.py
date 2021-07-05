@@ -11,8 +11,10 @@ train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True 
 test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True )
 
 # changing 3s and 7s, everything else to 0s, 1s, and 2s respectively... better way to do this?
-train_dataset.targets[ train_dataset.targets != ( 3 and 7 )] = 11
-test_dataset.targets[ test_dataset.targets != ( 3 and 7 )] = 11
+train_mask = ( train_dataset.targets != 3 ) & ( train_dataset.targets != 7 )
+train_dataset.targets[ train_mask ] = 11
+test_mask = ( test_dataset.targets != 3 ) & ( test_dataset.targets != 7 )
+test_dataset.targets[ test_mask ] = 11
 train_dataset.targets[ train_dataset.targets == 3 ] = 0
 test_dataset.targets[ test_dataset.targets == 3 ] = 0
 train_dataset.targets[ train_dataset.targets == 7 ] = 1
@@ -30,9 +32,9 @@ test_dataset.transform = data_transforms
 train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 128, shuffle = True )
 test_loader = torch.utils.data.DataLoader( test_dataset, batch_size = 512, shuffle = True )
 
-#  a, b = next( iter(train_loader ))
+a, b = next( iter(train_loader ))
 #  print( a.shape, b.shape )
-#  print( torch.min( b ), torch.max( b ))
+print( torch.min( b ), torch.max( b ))
 
 class Net( nn.Module ) :
     def __init__( self ) :
@@ -63,7 +65,7 @@ optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 # pre-training check for accuracy
 print( "******** PRETRAIN ********")
 
-for epoch in range( 3 ) :
+for epoch in range( 1 ) :
     running_loss = 0.0
     num_correct = 0
     model.eval() 
