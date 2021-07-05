@@ -11,8 +11,8 @@ train_dataset = torchvision.datasets.MNIST(root="./", train=True, download=True 
 test_dataset = torchvision.datasets.MNIST(root="./", train=False, download=True )
 
 # changing 3s and 7s, everything else to 0s, 1s, and 2s respectively... better way to do this?
-train_dataset.targets[( train_dataset.targets != 3 ) and ( train_dataset.targets != 7 )] = 11
-test_dataset.targets[( test_dataset.targets != 3 ) and ( test_dataset.targets != 7 )] = 11
+train_dataset.targets[ train_dataset.targets != ( 3 and 7 )] = 11
+test_dataset.targets[ test_dataset.targets != ( 3 and 7 )] = 11
 train_dataset.targets[ train_dataset.targets == 3 ] = 0
 test_dataset.targets[ test_dataset.targets == 3 ] = 0
 train_dataset.targets[ train_dataset.targets == 7 ] = 1
@@ -27,7 +27,7 @@ train_dataset.transform = data_transforms
 test_dataset.transform = data_transforms
 
 # batch size = 128
-train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 64, shuffle = True )
+train_loader = torch.utils.data.DataLoader( train_dataset, batch_size = 128, shuffle = True )
 test_loader = torch.utils.data.DataLoader( test_dataset, batch_size = 512, shuffle = True )
 
 #  a, b = next( iter(train_loader ))
