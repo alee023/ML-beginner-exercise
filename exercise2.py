@@ -108,7 +108,7 @@ torch.save( model.state_dict(), "mnist_alexnet.pt" )
 
 # test model
 print( "******** TESTING ********")
-for epoch in range( 3 ) :
+for epoch in range( 2 ) :
     running_loss = 0.0
     num_correct = 0
     model.eval() 

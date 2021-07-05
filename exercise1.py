@@ -65,7 +65,7 @@ optimizer = optim.SGD( model.parameters(), lr=0.0001, momentum=0.9 )
 # pre-training check for accuracy
 print( "******** PRETRAIN ********")
 
-for epoch in range( 3 ) :
+for epoch in range( 2 ) :
     running_loss = 0.0
     num_correct = 0
     model.eval() 
