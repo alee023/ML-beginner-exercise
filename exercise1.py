@@ -81,7 +81,7 @@ for epoch in range( 2 ) :
             y_pred = y_pred.data.max(1,keepdim=True)[1]
             num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
     running_loss /= len(train_loader) #Divide by the number of batches to get the average sample error
-    print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
+    print("Epoch {}: Pre-Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(train_dataset)))
 
 print( "******** TRAINING ********")
 for epoch in range( 5 ) :
@@ -126,4 +126,4 @@ for epoch in range( 3 ) :
             y_pred = y_pred.data.max(1,keepdim=True)[1]
             num_correct += y_pred.eq( y.data.view_as(y_pred)).sum()
     running_loss /= len(test_loader) #Divide by the number of batches to get the average sample error
-    print("Epoch {}: Training Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(test_dataset)))
+    print("Epoch {}: Testing Loss: {:.5f} Accuracy: {}/{}".format(epoch+1, running_loss, num_correct, len(test_dataset)))
